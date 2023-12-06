@@ -2,8 +2,8 @@ advent_of_code::solution!(6);
 
 pub fn part_one(input: &str) -> Option<u32> {
 
-// (time - (sqrt(time.pow(2) - 4 * distance))/2 ) <= x <= (time + (sqrt(time.pow(2) - 4 * distance))/2 )
-// for all x in natural numbers
+// with Wolfram alpha:
+// 1 + floor((t+sqrt(t^2-4*(d+1)))/2) - ceil((t-sqrt(t^2-4*(d+1)))/2) for t = 30 and d = 200
 
     None
 }
