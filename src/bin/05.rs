@@ -69,18 +69,38 @@ pub fn part_two(input: &str) -> Option<u32> {
         }).collect::<Vec<(i64, i64, i64)>>();
 
         parts.sort();
-        parts.reverse();
 
         parts
     }).collect::<Vec<Vec<(i64, i64, i64)>>>();
 
     // Try with ranges as seed instead of numbers
+    let result = seeds
+    .collect::<Vec<i64>>()
+    .chunks(2)
+    .map(|seed| {
+
+        let mut ranges = vec![(seed[0], seed[0] + seed[1])];
+        for step in steps.clone().into_iter(){
+            let mut new_ranges : Vec<(i64, i64)> = Vec::new();
+            
+            //transform the range into the new range(s) note that one range can become multiple
+            for range in ranges {
+                let diff = match step.clone().find(|(start, end, _)| {
+                    start <= &tmp_val && &tmp_val <= end
+                }) {
+                    Some(x) => x.2,
+                    None => 0
+                };
+                tmp_val -= diff;
+
+            }
+
+            ranges = new_ranges;
+        }
+        ranges
+    }).map(|range|  range.iter().min().unwrap().0 as u32 ).collect::<Vec<u32>>();
     
-    
-
-
-
-    None
+    Some(*result.iter().min().unwrap())
 }
 
 #[cfg(test)]
