@@ -23,7 +23,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     let mut boxes: HashMap<u8, HashMap<String, (u32, u32)>> = HashMap::new();
     let mut order_index = 0_u32;
-    for i in 0..u8::MAX{
+    for i in 0..=u8::MAX{
         boxes.insert(i,  HashMap::new());
     }
         input
@@ -32,38 +32,33 @@ pub fn part_two(input: &str) -> Option<u32> {
             .unwrap()
             .split(',')
             .for_each(|info| {
-                let label = info[..2].to_string();
+                let mut parts = info.split(&['=', '-']);
+                let label = parts.next().unwrap().to_string();
                 let correct_box = label.as_bytes().iter().fold(0_u8, |acc, elem| {
                     ((((acc as u32 + *elem as u32) % 256) * 17) % 256) as u8
                 });
 
-                let operation = &info[2..3];//keys have different sizes needs fixing still
-                
-                match operation {
-                    "=" => {
-                        let focal = info[3..4].parse::<u32>().unwrap();
-                        let hashm = boxes.get_mut(&correct_box).unwrap();
-                        if hashm.contains_key(&label){
-                            let cur = hashm.get(&label).unwrap();
-                            hashm.insert(label,(cur.0, focal));
-                        }else{
-                            hashm.insert(label,(order_index, focal));
-                        }
-                    },
-                    "-" => {
-                        boxes.get_mut(&correct_box).unwrap().remove(&label);
-                    },
-                    x => panic!("invalid operation: {}", x)
+                if info.contains('='){
+                    let focal = parts.next().unwrap().parse::<u32>().unwrap();
+                    let hashm = boxes.get_mut(&correct_box).unwrap();
+                    if hashm.contains_key(&label){
+                        let cur = hashm.get(&label).unwrap();
+                        hashm.insert(label,(cur.0, focal));
+                    }else{
+                        hashm.insert(label,(order_index, focal));
+                        order_index += 1;
+                    }
+                }else{
+                    boxes.get_mut(&correct_box).unwrap().remove(&label);
                 }
-                order_index += 1;
             });
     
     let mut res: u32 = 0;
-    for i in 0..u8::MAX{
+    for i in 0..=u8::MAX{
         let values = boxes.get(&i).unwrap().values();
         let ordering = values.sorted_by(|a, b| a.0.cmp(&b.0));
         for elem in ordering.enumerate(){
-            println!("{} * {} * {}", i+1, elem.0 + 1, elem.1.1);
+            // println!("{} * {} * {}", i+1, elem.0 + 1, elem.1.1);
             res += (1+i as u32) * (elem.0 as u32 + 1) * elem.1.1;
         }
     }
