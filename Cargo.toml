@@ -20,5 +20,13 @@ geo-types = "0.7.12"
 itertools = "0.12.0"
 lazy_static = "1.4.0"
 memoize = "0.4.1"
+ndarray = "0.15.6"
+ndarray-linalg = {version="0.16.0", features = ["openblas-static"]}
 pico-args = "0.5.0"
 regex = "1.10.2"
+
+[profile.release]
+debug = 1
+
+[rust]
+debuginfo-level = 1

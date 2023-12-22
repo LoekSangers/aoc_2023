@@ -23,3 +23,5 @@ data/puzzles/*
 !data/puzzles/.keep
 
 **/.adventofcode.session
+
+perf.*
